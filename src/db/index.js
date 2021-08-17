@@ -10,33 +10,24 @@ console.log(`Connecting to MySQL database ${process.env.MYSQL_DATABASE} on host 
 console.log(`    => user: ${process.env.MYSQL_USER}`);
 console.log(`    => password: ${process.env.MYSQL_PASSWORD}`);
 
-const dbConnectionInfo = {
-    // connectionLimit: 10,
+var pool = mysql.createPool({
+    connectionLimit: 10,
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
     port: process.env.MYSQL_PORT
 
-};
-
-// var pool = mysql.createPool();
-
-var dbconnection = mysql.createConnection(
-   dbConnectionInfo
-);
-
-dbconnection.connect(function (err) {
-    if (!err) {
-        console.log("Database is connected ... nn");
-    } else {
-        console.log("Error connecting database ... error = ", err);
-    }
 });
 
-// console.log(pool);
+// check if createPool succeeded...do some simple query
+pool.query('SELECT 1 + 1 AS solution', (error, results, fields) => {
+    if (error) throw error;
+    console.log('Connection Pool created; we are good to go...');
+});
 
-// Get all products
+
+// Get all products from db
 exports.listAllProducts = (callback) => {
     var sql = "SELECT * FROM products";
 

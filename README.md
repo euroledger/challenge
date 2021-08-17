@@ -1,4 +1,5 @@
-# coding challenge
+# Coding Challenge
+
 ExpressJS/SQL Database Coding Challenge
 
 Instructions for how to install and run the code (windows):
@@ -23,49 +24,37 @@ Instructions for how to install and run the code (windows):
 
 `https://dev.mysql.com/downloads/installer/`
 
-5. Execute the schema script in sql/create_schema.sql
+5. Execute the schema script in 
+
+`sql/create_schema.sql`
 
 This will create the database (testdb) and the four tables we use in this exercise, along with indexes, primary/foreign keys etc.
+It should also load 100 rows of dummy (test) data into the users table and the products table
+
+If there are any connection errors like this one:
+
+`ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server`
+
+Run the script set_root.sql which should fix this
+
+You will need to create a .env file in the root folder containing the following environment variables:
+
+    MYSQL_USER='<YOUR DB USER'
+    MYSQL_PASSWORD='<YOUR DB PASSWORD'
+    MYSQL_HOST='localhost'
+    MYSQL_PORT='3306'
+    MYSQL_DATABASE='testdb'`
+
+6. To run the server, execute in the root folder as follows:
 
 `npm run dev`
 
-This concurrently runs the server and client (see package.json)
+This runs the server using nodemon
 
-# To change branch in git
-`git checkout master`
+To interact with the server, use this URL in the browser:
 
+`localhost:3000`
 
-`git checkout test`
+To list all products, use this REST API endpoint, type in browser:
 
-# To check status
-`git status`
-
-This shows which branch you are on and what has changed since the last commit
-
-# To commit to test branch
-`git add .`
-
-
-`git commit -m<comment>`
-
-
-`git push -u origin test`
-
-# To merge test -> master
-
-`git checkout master`
-
-
-`git merge test`
-
-
-`git push origin master`
-
-# DAS-1 TEST 
-
-
-
-For information on Git branches/pull requests for the project see Cookbook (or ask Mike)
-
-Also see the Technical Notes document
-
+`localhost:3000/products`
