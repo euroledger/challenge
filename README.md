@@ -11,21 +11,21 @@ Instructions for how to install and run the code (windows):
 
 `git clone -b test https://github.com/euroledger/daledger.git`
 
-`cd daledger\server`
+`cd challenge`
 
 3. Install server node modules
 
 `npm install`
 
-4. Install client node modules (on dev there are two processes running concurrently: expressjs and react client)
+# Setting up the (MySQL) Database
 
-`cd client`
-`npm install` 
+4. Install MySQL
 
-5. Create the file dev.js in server\config and paste in the dev keys (ask Mike).
-These are our private keys for various APIs such as Google and MongoDB which are not committed to github for security reasons.
+`https://dev.mysql.com/downloads/installer/`
 
-6. Run the app
+5. Execute the schema script in sql/create_schema.sql
+
+This will create the database (testdb) and the four tables we use in this exercise, along with indexes, primary/foreign keys etc.
 
 `npm run dev`
 
