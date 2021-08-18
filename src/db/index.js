@@ -22,10 +22,23 @@ pool.query('SELECT 1 + 1 AS solution', (error, results, fields) => {
 });
 
 
-// Get all products from db
-exports.listAllProducts = (callback) => {
-    var sql = "SELECT * FROM products";
+const queryHandler = (connection, err, callback) => {
+    connection.release();
+    if (err) {
+        console.log(err);
+        callback(true);
+        return;
+    }
+}
 
+const doQuery = (connection, sql, params, callback) => {
+    connection.query(sql, params, function (err, results) {
+        queryHandler(connection, err, callback);
+        callback(false, results);
+    });
+ }
+
+const getConnectionAndQuery = (sql, params, callback) => {
     // get a connection from the pool
     pool.getConnection((err, connection) => {
         if (err) {
@@ -35,63 +48,31 @@ exports.listAllProducts = (callback) => {
         }
 
         // make the query
-        connection.query(sql, function (err, results) {
-            connection.release();
-            if (err) {
-                console.log(err);
-                callback(true);
-                return;
-            }
-            callback(false, results);
-        });
-    });
-};
-
-const doQuery = (sql, callback) => {
-    pool.getConnection((err, connection) => {
-        if (err) {
-            console.log(err);
-            callback(true);
-            return;
-        }
-
-        // make the query
-        connection.query(sql, function (err, results) {
-            connection.release();
-            if (err) {
-                console.log(err);
-                callback(true);
-                return;
-            }
-            callback(false, results);
-        });
+        doQuery(connection, sql, params, callback);
     });
 }
+
+// Get all products from db
+exports.listAllProducts = (callback) => {
+    var sql = "SELECT * FROM products";
+    getConnectionAndQuery(sql, null, callback);
+};
+
 
 exports.getProductByName = (name, callback) => {
     console.log("--> Looking for product with name ", name)
     var sql = "SELECT * FROM products WHERE name = ?";
-
-    // get a connection from the pool
-    pool.getConnection((err, connection) => {
-        if (err) {
-            console.log(err);
-            callback(true);
-            return;
-        }
-
-        // make the query
-        connection.query(sql, name, function (err, results) {
-            connection.release();
-            if (err) {
-                console.log(err);
-                callback(true);
-                return;
-            }
-            callback(false, results);
-        });
-    });
+    getConnectionAndQuery(sql, name, callback);
 };
+
+exports.getProductByOrderId = (id, callback) => {
+    console.log("--> Looking for products for the order id = ", id)
+    var sql = "SELECT products.id, products.name, products.merchant_id, products.price, products.status, products.created_at, \
+    order_items.quantity FROM orders INNER JOIN order_items ON orders.id = order_items.order_id AND orders.id = ?  \
+    INNER JOIN products ON order_items.product_id = products.id";
+    getConnectionAndQuery(sql, id, callback);
+};
+
 
 exports.addProduct = (product, callback) => {
     let sql = "SELECT max(id) as maxId FROM products";
@@ -113,15 +94,7 @@ exports.addProduct = (product, callback) => {
             var newId = Object.assign({}, results[0]).maxId + 1;
             sql = "INSERT INTO `products` VALUES (?, ?, ?, ?, ?, ?)";
 
-            connection.query(sql, [newId, product.name, parseInt(product.merchant_id), parseInt(product.price), product.status, product.created_at], function (err, results) {
-                console.log(results);
-                connection.release();
-                if (err) {
-                    console.log(err);
-                    callback(true);
-                    return;
-                }
-            });
+            doQuery(connection, sql, [newId, product.name, parseInt(product.merchant_id), parseInt(product.price), product.status, product.created_at], callback);
             callback(false, results);
         });
     });
@@ -136,38 +109,45 @@ exports.createOrder = (order, callback) => {
             return;
         }
 
-        console.log(">>> ORDER = ", order);
+        console.log("=> ORDER = ", order);
 
         // 1. insert row into orders table
         let sql = "INSERT INTO `orders` (user_id, status, created_at) VALUES (?, ?, ?)";
 
         // make the query
         connection.query(sql, [parseInt(order.user_id), order.status, order.created_at], function (err, results) {
+            
             if (err) {
                 console.log(err);
                 callback(true);
                 return;
             }
 
-            console.log("last id = ", results.insertId);
-
             // 2. insert each item ordered as one row inserted into the ordered_items table
             console.log("NUMBER OF ITEMS IN ORDER = ", order.items.length);
 
             sql = "INSERT INTO `order_items` VALUES (?, ?, ?)";
-
-            for (let i = 0; i < orders.items.length; i++) {
-                connection.query(sql, [results.insertId, order.items[i].product_id, order.items[i].quantity], function (err, results) {
-                    console.log(results);
-                    connection.release();
-                    if (err) {
-                        console.log(err);
-                        callback(true);
-                        return;
-                    }
-                });
+            for (let i = 0; i < order.items.length; i++) {
+                getConnectionAndQuery(sql, [results.insertId, order.items[i].product_id, order.items[i].quantity], callback);
             }
             callback(false, results);
         });
+    });
+};
+exports.addItemToOrder = (body, callback) => {
+
+    const orderId = parseInt(body.order_id);
+    const productId = parseInt(body.product_id);
+    const quantity = parseInt(body.quantity);
+
+    const sql = "INSERT INTO `order_items` VALUES(?, ?, ?)";
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.log(err);
+            callback(true);
+            return;
+        }
+        // make the query
+        doQuery(connection, sql, [orderId, productId, quantity], callback);
     });
 };

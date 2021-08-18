@@ -13,8 +13,8 @@ var productRoutes = function (db) {
             res.send(results);
         });
     });
+
     router.get('/:name', function (req, res, next) {
-        // res.send('respond with a named resource');
         db.getProductByName(req.params.name, (err, results) => {
             if (err) {
                 res.send(500, "Server Error");
@@ -24,7 +24,7 @@ var productRoutes = function (db) {
             res.send(results);
         });
     });
-    
+
     router.post('/', function (req, res, next) {       
         db.addProduct(req.body, (err, results) => {
             if (err) {

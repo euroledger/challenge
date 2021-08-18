@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS `testdb`.`order_items` (
   `order_id` INT NOT NULL,
   `product_id` INT NOT NULL,
   `quantity` INT NOT NULL,
-  PRIMARY KEY (`order_id`),
   INDEX `fk_product_id_idx` (`product_id` ASC) VISIBLE,
   CONSTRAINT `fk_order_id`
     FOREIGN KEY (`order_id`)

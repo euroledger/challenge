@@ -2,17 +2,23 @@ const request = require('supertest');
 
 const mockListAllProducts = jest.fn();
 const mockGetProductByName = jest.fn();
-
+const mockAddProduct = jest.fn();
+const mockCreateOrder = jest.fn();
+const mockGetProductByOrderId = jest.fn();
+const mockAddItemToOrder = jest.fn()
 
 const db = {
     listAllProducts: mockListAllProducts,
-    getProductByName: mockGetProductByName
+    getProductByName: mockGetProductByName,
+    addProduct: mockAddProduct,
+    createOrder: mockCreateOrder,
+    getProductByOrderId: mockGetProductByOrderId,
+    addItemToOrder: mockAddItemToOrder
 };
 var app = require('../src/app')(db);
 
 
 describe('Products API', () => {
-
     test('GET /products --> array products', async () => {
         request(app)
             .get('/products')
@@ -35,27 +41,44 @@ describe('Products API', () => {
             });
     });
 
-    it('GET /products/orderId --> array of products for a given order', () => {
-
-    });
-
-    it('POST /products --> create product', () => {
+    it('GET /productsbyid --> array of products for a given order', () => {
         request(app)
-        .post('/newproducts')
-        .expect('Content-Type', /json/)
-        .expect('Content-Length', '15')
+        .get('/productsbyid')
+        .expect('Content-Length', '1369')
         .expect(200)
         .end(function (err, res) {
             if (err) throw err;
         });
     });
 
-    it('POST /orders --> create an order containing multiple order_items (each one contains a product id)', () => {
-
+    test('POST /addProduct --> create product', () => {
+        request(app)
+        .post('/addProduct')
+        .expect('Content-Length', '2')
+        .expect(200)
+        .end(function (err, res) {
+            if (err) throw err;
+        });
     });
 
-    it('POST /order_items -> add a product (item) to an order', () => {
+    test('POST /createOrder --> create an order containing multiple order_testems (each one contains a product id)', () => {
+        request(app)
+        .post('/createOrder')
+        .expect('Content-Length', '2')
+        .expect(200)
+        .end(function (err, res) {
+            if (err) throw err;
+        });
+    });
 
+    test('POST /createorder/new -> add a product (item) to an order', () => {
+        request(app)
+        .post('/createorder/new')
+        .expect('Content-Length', '1421')
+        .expect(200)
+        .end(function (err, res) {
+            if (err) throw err;
+        });
     });
 
 });
