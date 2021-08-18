@@ -4,8 +4,9 @@
  * Module dependencies.
  */
 require('dotenv').config();
+const db = require('../src/db');
 
-var app = require('../src/app');
+var app = require('../src/app')(db);
 var debug = require('debug')('challenge:server');
 var http = require('http');
 

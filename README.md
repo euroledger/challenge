@@ -39,8 +39,8 @@ Run the script set_root.sql which should fix this
 
 You will need to create a .env file in the root folder containing the following environment variables:
 
-    MYSQL_USER='<YOUR DB USER'
-    MYSQL_PASSWORD='<YOUR DB PASSWORD'
+    MYSQL_USER='<YOUR DB USER>'
+    MYSQL_PASSWORD='<YOUR DB PASSWORD>'
     MYSQL_HOST='localhost'
     MYSQL_PORT='3306'
     MYSQL_DATABASE='testdb'`

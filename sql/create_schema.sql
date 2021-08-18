@@ -1,9 +1,12 @@
 -- MySQL Workbench Forward Engineering
 
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
 -- -----------------------------------------------------
 -- Schema testdb
 -- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `testdb` ;
 
 -- -----------------------------------------------------
 -- Schema testdb
@@ -11,65 +14,75 @@ DROP SCHEMA IF EXISTS `testdb` ;
 CREATE SCHEMA IF NOT EXISTS `testdb` DEFAULT CHARACTER SET utf8 ;
 USE `testdb` ;
 
---
--- Table structure for table `order_items`
---
-
-DROP TABLE IF EXISTS `order_items`;
-
-CREATE TABLE `order_items` (
-  `order_id` int NOT NULL,
-  `product_id` int NOT NULL,
-  `quantity` int NOT NULL,
-  PRIMARY KEY (`order_id`),
-  KEY `fk_product_id_idx` (`product_id`),
-  CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
-  CONSTRAINT `fk_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+-- -----------------------------------------------------
+-- Table `testdb`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `testdb`.`users` (
+  `id` INT NOT NULL,
+  `full_name` VARCHAR(45) NOT NULL,
+  `created_at` BIGINT NOT NULL,
+  `country_code` CHAR(2) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
 
 
-LOCK TABLES `order_items` WRITE;
-/*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `orders`
---
-
-DROP TABLE IF EXISTS `orders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `orders` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `status` varchar(45) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
+-- -----------------------------------------------------
+-- Table `testdb`.`orders`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `testdb`.`orders` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `status` VARCHAR(45) NULL,
+  `created_at` DATETIME NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_user_id_idx` (`user_id`),
-  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  INDEX `fk_user_id_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_user_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `testdb`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
-LOCK TABLES `orders` WRITE;
+-- -----------------------------------------------------
+-- Table `testdb`.`products`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `testdb`.`products` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `merchant_id` BIGINT NULL,
+  `price` DECIMAL(8,2) NOT NULL,
+  `status` VARCHAR(20) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
 
-UNLOCK TABLES;
 
---
--- Table structure for table `products`
---
+-- -----------------------------------------------------
+-- Table `testdb`.`order_items`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `testdb`.`order_items` (
+  `order_id` INT NOT NULL,
+  `product_id` INT NOT NULL,
+  `quantity` INT NOT NULL,
+  PRIMARY KEY (`order_id`),
+  INDEX `fk_product_id_idx` (`product_id` ASC) VISIBLE,
+  CONSTRAINT `fk_order_id`
+    FOREIGN KEY (`order_id`)
+    REFERENCES `testdb`.`orders` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_product_id`
+    FOREIGN KEY (`product_id`)
+    REFERENCES `testdb`.`products` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `products`;
 
-CREATE TABLE `products` (
-  `id` int NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `merchant_id` bigint DEFAULT NULL,
-  `price` decimal(8,2) NOT NULL,
-  `status` varchar(20) NOT NULL,
-  `created_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 --
 -- Dumping data for table `products`
@@ -179,21 +192,7 @@ INSERT INTO `products` VALUES (100,'Quail - Whole, Bone - In',6237103392,92.29,'
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `users`
---
 
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
-  `id` int NOT NULL,
-  `full_name` varchar(45) NOT NULL,
-  `created_at` int NOT NULL,
-  `country_code` char(2) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users`
