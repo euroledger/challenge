@@ -145,5 +145,5 @@ This is the id in the URL of the GoogleSheet
 <img src="assets/sheetId.jpg"
         alt="Acme Main"
         style="padding-top: 20px; padding-bottom: 20px" 
-        width="500"
-        height="200"/>
+        width="700"
+        height="300"/>
