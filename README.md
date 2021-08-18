@@ -142,7 +142,7 @@ The spreadsheet we are writing to is set in the environment variable SPREADSHEET
 
 This is the id in the URL of the GoogleSheet
 
-<img src="assets/acme-1.png"
+<img src="assets/kirk.jpg"
         alt="Acme Main"
         style="padding-top: 20px; padding-bottom: 20px" 
         width="600"
