@@ -13,9 +13,11 @@ exports.uploadToGoogleSpreadsheet = async (data) => {
     });
 
     let values = data.map((element) => {
-        return {id: element.id, name: element.name, quantity: element.quantity};
+        return [element.id, element.name, element.quantity];
     });
     
+    values.unshift(["PRODUCT ID", "PRODUCT NAME", "QUANTITY"]);
+
     console.log(values);
 
     console.log("Authorizing Google Sheets");
@@ -24,19 +26,23 @@ exports.uploadToGoogleSpreadsheet = async (data) => {
         version: 'v4',
         auth: client
     });
-
-    // get metadata about sheet
-    const metaData = await googleSheets.spreadsheets.get({
-        auth,
-        spreadsheetId
-    });
-
-    // console.log(metaData);
-    const getRows = await googleSheets.spreadsheets.values.get({
+    // clear the sheet
+    await googleSheets.spreadsheets.values.clear({
         auth,
         spreadsheetId,
-        range: "sheet1"
+        range: "sheet1",
     });
 
-    console.log(getRows.data);
+    // write the data to the sheet
+    await googleSheets.spreadsheets.values.append({
+        auth,
+        spreadsheetId,
+        range: "sheet1",
+        valueInputOption: "RAW",
+        resource: {
+            values
+        }
+    });
+
+
 }

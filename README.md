@@ -143,7 +143,15 @@ The spreadsheet we are writing to is set in the environment variable SPREADSHEET
 This is the id in the URL of the GoogleSheet
 
 <img src="assets/sheetId.jpg"
-        alt="Acme Main"
+        alt="Sheet ID"
         style="padding-top: 20px; padding-bottom: 20px" 
         width="700"
         height="300"/>
+
+The application writes the product reporting data, according to a weekly schedule, as shown here:
+
+<img src="assets/sheetdata.jpg"
+        alt="Sheet Data"
+        style="padding-top: 20px; padding-bottom: 20px" 
+        width="800"
+        height="200"/>
