@@ -16,6 +16,7 @@ exports.uploadToGoogleSpreadsheet = async (data) => {
         return [element.id, element.name, element.quantity];
     });
     
+    // add column headers to front of array
     values.unshift(["PRODUCT ID", "PRODUCT NAME", "QUANTITY"]);
 
     console.log(values);
@@ -34,6 +35,7 @@ exports.uploadToGoogleSpreadsheet = async (data) => {
     });
 
     // write the data to the sheet
+    console.log("Writing data to sheet...");
     await googleSheets.spreadsheets.values.append({
         auth,
         spreadsheetId,
@@ -43,6 +45,6 @@ exports.uploadToGoogleSpreadsheet = async (data) => {
             values
         }
     });
-
+    console.log("Done!");
 
 }

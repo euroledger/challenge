@@ -49,7 +49,7 @@ You will need to create a .env file in the root folder containing the following 
 
 6. To run the server, execute in the root folder as follows:
 
-`npm run dev`
+`npm run start`
 
 This runs the server using nodemon
 

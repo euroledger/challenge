@@ -19,7 +19,6 @@ exports.scheduleProductReport = (database, callback) => {
             res.send(500, "Server Error");
             return;
         }
-        // callback(results);
         google.uploadToGoogleSpreadsheet(results);
     });
 };
