@@ -53,7 +53,8 @@ You will need to create a .env file in the root folder containing the following 
 
 This runs the server using nodemon
 
-To interact with the server, use this URL in the browser:
+# Running the Server
+Use these URLs in the browser:
 
 1. Index Route
 `localhost:3000`
