@@ -142,8 +142,8 @@ The spreadsheet we are writing to is set in the environment variable SPREADSHEET
 
 This is the id in the URL of the GoogleSheet
 
-<img src="assets/kirk.jpg"
+<img src="assets/sheetId.jpg"
         alt="Acme Main"
         style="padding-top: 20px; padding-bottom: 20px" 
-        width="600"
-        height="400"/>
+        width="300"
+        height="200"/>
