@@ -53,8 +53,73 @@ This runs the server using nodemon
 
 To interact with the server, use this URL in the browser:
 
+1. Index Route
 `localhost:3000`
 
-To list all products, use this REST API endpoint, type in browser:
+2. To list all products, use this REST API endpoint, type in browser:
 
 `localhost:3000/products`
+
+For most of the API routes it is best to use a http request tool such as Postman
+
+The routes are
+
+3. Add a new product
+
+`localhost:3000/addproduct`
+
+with json payload of
+
+`{   
+    "name": "Seafood Pie",
+    "merchant_id": "2237544793",
+    "price": "67.44",
+    "status": "IN STOCK",
+    "created_at": "2021-08-18 00:00:00"
+}`
+
+4. Create a new order 
+
+`localhost:3000/createorder`
+
+with a payload of 
+
+`{
+    "user_id": 52, 
+    "status": "PENDING",
+    "created_at": "2021-08-18 00:00:00",
+    "items": [
+        {
+            "product_id": "88",
+            "quantity": "2"
+        },
+        {
+            "product_id": "56",
+            "quantity": "1"
+        }
+    ]
+}`
+
+Here we are inserting a new order, and for each item in the order we add a new row to the order_items table
+
+5. Search for products for a given order id
+
+`localhost:3000/productsbyid`
+
+payload is:
+
+`{
+    "id": "21"
+}`
+
+6. Add a product to an order
+
+`localhost:3000/createorder/new`
+
+payload:
+
+`{
+    "order_id": 21,
+    "product_id": 2,
+    "quantity": 1
+}`
