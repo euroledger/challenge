@@ -4,11 +4,19 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const indexRouter = require('./routes/index');
+const scheduler = require('./scheduler');
 
 var app = function (database) {
+
+    scheduler.scheduleProductReport(database, (results) => {
+        console.log("Report...");
+        console.log(results);
+    });
+
     const productRoutes = require('./routes/products')(database);
     const orderRoutes = require('./routes/orders')(database);
     const orderItemRoutes = require('./routes/orderItems')(database);
+    const reportRoutes = require('./routes/reports')(database);
 
     const app = express();
 
@@ -29,12 +37,8 @@ var app = function (database) {
     app.use('/addproduct', productRoutes);
     app.use('/createorder', orderRoutes);
     app.use('/createorder/new', orderRoutes);
-
-    
-
-
     app.use('/productsbyid', orderItemRoutes);
-
+    app.use('/generatereport', reportRoutes);
 
 
     // catch 404 and forward to error handler

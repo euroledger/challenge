@@ -15,8 +15,9 @@ const db = {
     getProductByOrderId: mockGetProductByOrderId,
     addItemToOrder: mockAddItemToOrder
 };
-var app = require('../src/app')(db);
 
+// provide mock database to the application
+var app = require('../src/app')(db);
 
 describe('Products API', () => {
     test('GET /products --> array products', async () => {
@@ -41,7 +42,7 @@ describe('Products API', () => {
             });
     });
 
-    it('GET /productsbyid --> array of products for a given order', () => {
+    test('GET /productsbyid --> array of products for a given order', () => {
         request(app)
         .get('/productsbyid')
         .expect('Content-Length', '1369')
@@ -74,7 +75,7 @@ describe('Products API', () => {
     test('POST /createorder/new -> add a product (item) to an order', () => {
         request(app)
         .post('/createorder/new')
-        .expect('Content-Length', '1421')
+        .expect('Content-Length', '2')
         .expect(200)
         .end(function (err, res) {
             if (err) throw err;

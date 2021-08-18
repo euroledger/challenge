@@ -36,7 +36,7 @@ const doQuery = (connection, sql, params, callback) => {
         queryHandler(connection, err, callback);
         callback(false, results);
     });
- }
+}
 
 const getConnectionAndQuery = (sql, params, callback) => {
     // get a connection from the pool
@@ -116,7 +116,7 @@ exports.createOrder = (order, callback) => {
 
         // make the query
         connection.query(sql, [parseInt(order.user_id), order.status, order.created_at], function (err, results) {
-            
+
             if (err) {
                 console.log(err);
                 callback(true);
@@ -149,5 +149,25 @@ exports.addItemToOrder = (body, callback) => {
         }
         // make the query
         doQuery(connection, sql, [orderId, productId, quantity], callback);
+    });
+};
+
+exports.generateProductReport = (callback) => {
+
+    console.log("we are in generateProductReport");
+
+    const sql = "SELECT products.id, products.name, sum(order_items.quantity) quantity FROM products \
+            INNER JOIN order_items \
+            ON products.id = order_items.product_id \
+            GROUP BY products.id";
+
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.log(err);
+            callback(true);
+            return;
+        }
+        // make the query
+        doQuery(connection, sql, null, callback);
     });
 };

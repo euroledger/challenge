@@ -8,9 +8,9 @@ Instructions for how to install and run the code (windows):
 
 `https://github.com/euroledger/challenge`
 
-2. clone the code (important: always work on test branch)
+2. clone the code
 
-`git clone -b test https://github.com/euroledger/daledger.git`
+`git clone -b test https://github.com/euroledger/challenge.git`
 
 `cd challenge`
 
@@ -29,7 +29,9 @@ Instructions for how to install and run the code (windows):
 `sql/create_schema.sql`
 
 This will create the database (testdb) and the four tables we use in this exercise, along with indexes, primary/foreign keys etc.
-It should also load 100 rows of dummy (test) data into the users table and the products table
+It should also load 100 rows of dummy (test) data into the users table and the products table.
+
+Dummy data generated with http://www.mockaroo.com
 
 If there are any connection errors like this one:
 
@@ -123,3 +125,25 @@ payload:
     "product_id": 2,
     "quantity": 1
 }`
+
+# Unit Tests
+
+There are some unit tests for the routing; these can be found in `app.test.js`
+The tests use supertest and jest to run the test suite, with database functions mocked using jest.fn()
+
+# Google Spreadsheet API
+
+The application writes data to the google sheet using the API. This requires credentials in the json file which are passed
+to the API. 
+
+Set up details here -> `https://cloud.google.com/docs/authentication/getting-started#windows`
+
+The spreadsheet we are writing to is set in the environment variable SPREADSHEET_ID in .env
+
+This is the id in the URL of the GoogleSheet
+
+<img src="assets/acme-1.png"
+        alt="Acme Main"
+        style="padding-top: 20px; padding-bottom: 20px" 
+        width="600"
+        height="400"/>
