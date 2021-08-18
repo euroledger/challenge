@@ -12,7 +12,7 @@ exports.scheduleProductReport = (database, callback) => {
     rule.minute = 0;
     rule.tz = 'Etc/UTC';
 
-    console.log(new Date(), '>> Weekly Report Generation...');
+    console.log(new Date(), 'Weekly Report Generation...');
 
     results = database.generateProductReport((err, results) => {
         if (err) {
